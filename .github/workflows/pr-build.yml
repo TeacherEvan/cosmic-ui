@@ -1,0 +1,57 @@
+name: PR build
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+# Cancel superseded runs on the same ref.
+concurrency:
+  group: pr-build-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Type-check, lint (changed), build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # Need the base branch so we can diff changed files for lint scope.
+          fetch-depth: 0
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: yarn
+
+      - name: Install
+        run: yarn install --frozen-lockfile
+
+      - name: Type-check
+        run: yarn tsc -b
+
+      - name: Build
+        run: yarn build
+
+      - name: Lint changed files only
+        # Scope lint to this PR's own files so the gate isn't polluted by
+        # pre-existing upstream lint debt outside this change.
+        run: |
+          BASE=$(git merge-base origin/main HEAD)
+          FILES=$(git diff --name-only "$BASE" HEAD -- '*.ts' '*.tsx' | while read f; do [ -f "$f" ] && echo "$f"; done)
+          if [ -n "$FILES" ]; then
+            echo "Linting changed files:"; echo "$FILES"
+            yarn eslint $FILES
+          else
+            echo "No changed .ts/.tsx files to lint."
+          fi
+
+      - name: Upload preview artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: cosmic-ui-dist
+          path: dist
+          if-no-files-found: error
