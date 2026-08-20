@@ -29,6 +29,11 @@
   );
   --color-foreground: var(--color-white);
 
+  --color-void: rgb(5, 8, 15);
+  --color-haze: rgb(22, 34, 47);
+  --color-star: rgb(232, 241, 255);
+  --color-signal: rgb(91, 227, 201);
+
   --font-orbitron: "Orbitron", sans-serif;
   --font-roboto: "Roboto", sans-serif;
 
@@ -138,5 +143,29 @@ body {
 
   100% {
     filter: blur(0px);
+  }
+}
+
+@utility open-anim {
+  animation: window-open 0.22s ease-out;
+}
+
+@keyframes window-open {
+  0% {
+    opacity: 0;
+    transform: scale(0.96) translateY(8px);
+    filter: blur(6px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+    filter: blur(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .open-anim {
+    animation: none;
   }
 }

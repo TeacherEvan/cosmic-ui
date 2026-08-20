@@ -5,7 +5,6 @@ import {
   MenuContent,
   MenuItem,
 } from "@/components/ui/menu";
-import Menu from "@/components/menu";
 import { Link } from "react-router";
 import { twMerge } from "tailwind-merge";
 import { Frame } from "@/components/ui/frame";
@@ -997,9 +996,6 @@ function Main() {
             </div>
           </div>
         </div>
-      </div>
-      <div className="lg:hidden">
-        <Menu />
       </div>
     </>
   );
