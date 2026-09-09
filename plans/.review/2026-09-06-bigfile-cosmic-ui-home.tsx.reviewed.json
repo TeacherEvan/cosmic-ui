@@ -1,0 +1,9 @@
+{
+  "plan": "2026-09-06-bigfile-cosmic-ui-home.tsx.md",
+  "verdict": "READY-WITH-WARNINGS",
+  "ready_for_impl": true,
+  "gaps": [
+    "llm_unreachable"
+  ],
+  "reviewed_at": "2026-09-06T08:19:19.482593+07:00"
+}
